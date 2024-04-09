@@ -14,6 +14,12 @@ data class DelcomTodosResponse(
 	val message: String
 )
 
+data class DataTodosResponse(
+
+	@field:SerializedName("todos")
+	val todos: List<TodosItemResponse>
+)
+
 data class TodosItemResponse(
 
 	@field:SerializedName("cover")
@@ -36,10 +42,4 @@ data class TodosItemResponse(
 
 	@field:SerializedName("is_finished")
 	var isFinished: Int
-)
-
-data class DataTodosResponse(
-
-	@field:SerializedName("todos")
-	val todos: List<TodosItemResponse>
 )

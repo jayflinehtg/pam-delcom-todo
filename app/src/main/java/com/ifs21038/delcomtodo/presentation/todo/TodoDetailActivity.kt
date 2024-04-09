@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.ifs21038.delcomtodo.data.model.DelcomTodo
 import com.ifs21038.delcomtodo.data.remote.MyResult
+import com.ifs21038.delcomtodo.data.remote.response.TodoResponse
 import com.ifs21038.delcomtodo.databinding.ActivityTodoDetailBinding
 import com.ifs21038.delcomtodo.helper.Utils.Companion.observeOnce
 import com.ifs21038.delcomtodo.presentation.ViewModelFactory
