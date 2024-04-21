@@ -22,6 +22,7 @@ import com.ifs21038.delcomtodo.presentation.ViewModelFactory
 import com.ifs21038.delcomtodo.presentation.login.LoginActivity
 import com.ifs21038.delcomtodo.presentation.profile.ProfileActivity
 import com.ifs21038.delcomtodo.presentation.todo.TodoDetailActivity
+import com.ifs21038.delcomtodo.presentation.todo.TodoFavoriteActivity
 import com.ifs21038.delcomtodo.presentation.todo.TodoManageActivity
 
 class MainActivity : AppCompatActivity() {
@@ -47,7 +48,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         setupView()
         setupAction()
     }
-
     private fun setupView() {
         showComponentNotEmpty(false)
         showEmptyError(false)
@@ -65,7 +64,6 @@ class MainActivity : AppCompatActivity() {
                 .getDrawable(this, R.drawable.ic_more_vert_24)
         observeGetTodos()
     }
-
     private fun setupAction() {
         binding.appbarMain.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -73,13 +71,15 @@ class MainActivity : AppCompatActivity() {
                     openProfileActivity()
                     true
                 }
-
+                R.id.mainMenuFavoriteTodos -> {
+                    openFavoriteTodoActivity()
+                    true
+                }
                 R.id.mainMenuLogout -> {
                     viewModel.logout()
                     openLoginActivity()
                     true
                 }
-
                 else -> false
             }
         }
@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun observeGetTodos() {
         viewModel.getTodos().observe(this) { result ->
             if (result != null) {
@@ -102,12 +101,10 @@ class MainActivity : AppCompatActivity() {
                     is MyResult.Loading -> {
                         showLoading(true)
                     }
-
                     is MyResult.Success -> {
                         showLoading(false)
                         loadTodosToLayout(result.data)
                     }
-
                     is MyResult.Error -> {
                         showLoading(false)
                         showEmptyError(true)
@@ -116,7 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun loadTodosToLayout(response: DelcomTodosResponse) {
         val todos = response.data.todos
         val layoutManager = LinearLayoutManager(this)
@@ -163,7 +159,6 @@ class MainActivity : AppCompatActivity() {
                                     ).show()
                                 }
                             }
-
                             is MyResult.Success -> {
                                 if (isChecked) {
                                     Toast.makeText(
@@ -179,12 +174,10 @@ class MainActivity : AppCompatActivity() {
                                     ).show()
                                 }
                             }
-
                             else -> {}
                         }
                     }
                 }
-
                 override fun onClickDetailListener(todoId: Int) {
                     val intent = Intent(
                         this@MainActivity,
@@ -199,7 +192,6 @@ class MainActivity : AppCompatActivity() {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         return false
                     }
-
                     override fun onQueryTextChange(newText: String): Boolean {
                         adapter.filter(newText)
                         binding.rvMainTodos.layoutManager?.scrollToPosition(0)
@@ -208,29 +200,24 @@ class MainActivity : AppCompatActivity() {
                 })
         }
     }
-
     private fun showLoading(isLoading: Boolean) {
         binding.pbMain.visibility =
             if (isLoading) View.VISIBLE else View.GONE
     }
-
     private fun openProfileActivity() {
         val intent = Intent(applicationContext, ProfileActivity::class.java)
         startActivity(intent)
     }
-
     private fun showComponentNotEmpty(status: Boolean) {
         binding.svMain.visibility =
             if (status) View.VISIBLE else View.GONE
         binding.rvMainTodos.visibility =
             if (status) View.VISIBLE else View.GONE
     }
-
     private fun showEmptyError(isError: Boolean) {
         binding.tvMainEmptyError.visibility =
             if (isError) View.VISIBLE else View.GONE
     }
-
     private fun openLoginActivity() {
         val intent = Intent(applicationContext, LoginActivity::class.java)
         intent.flags =
@@ -238,13 +225,19 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
     private fun openAddTodoActivity() {
         val intent = Intent(
             this@MainActivity,
             TodoManageActivity::class.java
         )
         intent.putExtra(TodoManageActivity.KEY_IS_ADD, true)
+        launcher.launch(intent)
+    }
+    private fun openFavoriteTodoActivity() {
+        val intent = Intent(
+            this@MainActivity,
+            TodoFavoriteActivity::class.java
+        )
         launcher.launch(intent)
     }
 }
