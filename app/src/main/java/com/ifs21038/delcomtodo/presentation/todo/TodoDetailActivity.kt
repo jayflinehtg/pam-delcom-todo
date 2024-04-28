@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.ifs21038.delcomtodo.R
 import com.ifs21038.delcomtodo.data.local.entity.DelcomTodoEntity
 import com.ifs21038.delcomtodo.data.model.DelcomTodo
@@ -16,6 +17,7 @@ import com.ifs21038.delcomtodo.data.remote.response.TodoResponse
 import com.ifs21038.delcomtodo.databinding.ActivityTodoDetailBinding
 import com.ifs21038.delcomtodo.helper.Utils.Companion.observeOnce
 import com.ifs21038.delcomtodo.presentation.ViewModelFactory
+
 
 class TodoDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTodoDetailBinding
@@ -84,6 +86,15 @@ class TodoDetailActivity : AppCompatActivity() {
             tvTodoDetailTitle.text = todo.title
             tvTodoDetailDate.text = "Dibuat pada: ${todo.createdAt}"
             tvTodoDetailDesc.text = todo.description
+            if(todo.cover != null){
+                ivTodoDetailCover.visibility = View.VISIBLE
+                Glide.with(this@TodoDetailActivity)
+                    .load(todo.cover)
+                    .placeholder(R.drawable.ic_image_24)
+                    .into(ivTodoDetailCover)
+            }else{
+                ivTodoDetailCover.visibility = View.GONE
+            }
             viewModel.getLocalTodo(todo.id).observeOnce {
                 if(it != null){
                     delcomTodo = it
@@ -135,6 +146,7 @@ class TodoDetailActivity : AppCompatActivity() {
                     }
                 }
             }
+
             ivTodoDetailActionFavorite.setOnClickListener {
                 if(isFavorite){
                     setFavorite(false)
@@ -196,7 +208,7 @@ class TodoDetailActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setFavorite(status: Boolean){
+            private fun setFavorite(status: Boolean){
         isFavorite = status
         if(status){
             binding.ivTodoDetailActionFavorite

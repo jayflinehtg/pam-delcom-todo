@@ -6,12 +6,15 @@ import com.ifs21038.delcomtodo.data.remote.response.DelcomResponse
 import com.ifs21038.delcomtodo.data.remote.response.DelcomTodoResponse
 import com.ifs21038.delcomtodo.data.remote.response.DelcomTodosResponse
 import com.ifs21038.delcomtodo.data.remote.response.DelcomUserResponse
+import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 interface IApiService {
@@ -55,5 +58,12 @@ interface IApiService {
     @DELETE("todos/{id}")
     suspend fun deleteTodo(
         @Path("id") todoId: Int,
+    ): DelcomResponse
+
+    @Multipart
+    @POST("todos/{id}/cover")
+    suspend fun addCoverTodo(
+        @Path("id") todoId: Int,
+        @Part cover: MultipartBody.Part,
     ): DelcomResponse
 }
